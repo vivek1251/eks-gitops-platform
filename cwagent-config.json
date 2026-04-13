@@ -1,0 +1,1 @@
+{"logs":{"metrics_collected":{"kubernetes":{"cluster_name":"eks-gitops-cluster","metrics_collection_interval":60}}},"force_flush_interval":5}
