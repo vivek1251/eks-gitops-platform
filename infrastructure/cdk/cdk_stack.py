@@ -60,10 +60,10 @@ class EksGitopsPlatformStack(Stack):
         cluster.add_nodegroup_capacity(
             "EksNodeGroup",
             nodegroup_name="eks-gitops-nodes",
-            instance_types=[ec2.InstanceType("t3.medium")],
+            instance_types=[ec2.InstanceType("t3.small")],
             min_size=1,
-            desired_size=2,
-            max_size=4,
+            desired_size=1,
+            max_size=2,
             node_role=node_role,
             subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType.PRIVATE_WITH_EGRESS),
         )
