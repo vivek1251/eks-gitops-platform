@@ -1,0 +1,21 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 585707316406.dkr.ecr.ap-south-1.amazonaws.com
+  build:
+    commands:
+      - echo Building Docker image...
+      - docker build -t eks-gitops-app .
+      - docker tag eks-gitops-app:latest 585707316406.dkr.ecr.ap-south-1.amazonaws.com/eks-gitops-app:latest
+  post_build:
+    commands:
+      - echo Pushing image to ECR...
+      - docker push 585707316406.dkr.ecr.ap-south-1.amazonaws.com/eks-gitops-app:latest
+
+artifacts:
+  files:
+    - appspec.yml
+    - scripts/**/*
