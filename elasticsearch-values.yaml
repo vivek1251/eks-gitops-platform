@@ -1,0 +1,25 @@
+replicas: 1
+minimumMasterNodes: 1
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 512Mi
+  limits:
+    cpu: 500m
+    memory: 1Gi
+
+volumeClaimTemplate:
+  resources:
+    requests:
+      storage: 5Gi
+
+esJavaOpts: "-Xmx512m -Xms512m"
+
+persistence:
+  enabled: false
+
+antiAffinity: "soft"
+
+service:
+  type: ClusterIP
