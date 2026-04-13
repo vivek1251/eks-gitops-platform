@@ -1,0 +1,6 @@
+apiVersion: v2
+name: eks-gitops-app
+description: EKS GitOps Platform Demo App
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
