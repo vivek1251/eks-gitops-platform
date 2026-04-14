@@ -19,7 +19,7 @@ filebeatConfig:
     output.elasticsearch:
       hosts: ["https://elasticsearch-master:9200"]
       username: "elastic"
-      password: "qku5azUp0fQq25iY"
+      password: "${ELASTICSEARCH_PASSWORD}"
       ssl.verification_mode: "none"
 
 extraEnvs:
