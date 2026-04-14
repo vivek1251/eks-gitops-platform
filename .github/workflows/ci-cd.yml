@@ -12,7 +12,6 @@ env:
   EKS_CLUSTER: eks-gitops-cluster
 
 jobs:
-
   build-and-test:
     name: Build and Test
     runs-on: ubuntu-latest
@@ -43,6 +42,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-and-test
     if: github.ref == 'refs/heads/main'
+    outputs:
+      ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+      IMAGE_TAG: ${{ github.sha }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -71,7 +73,6 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest ./app
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }}
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          echo "IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }}" >> $GITHUB_OUTPUT
 
   deploy-to-eks:
     name: Deploy to EKS
@@ -96,7 +97,8 @@ jobs:
       - name: Deploy to EKS
         env:
           ECR_REGISTRY: ${{ needs.push-to-ecr.outputs.ECR_REGISTRY }}
+          IMAGE_TAG: ${{ needs.push-to-ecr.outputs.IMAGE_TAG }}
         run: |
           kubectl set image deployment/eks-gitops-app \
-            app=$ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }} \
-            --record || echo "Deployment not found, will be created by Helm"
+            app=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
+            || echo "Deployment not found, ArgoCD will sync from Git"
