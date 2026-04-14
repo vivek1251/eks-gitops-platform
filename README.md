@@ -1,240 +1,241 @@
-# DevOps Assignment — Real-Time WebSocket Chat Application
+# 🚀 Enterprise-Grade EKS GitOps Platform
 
-![CI/CD](https://github.com/vivek1251/DevOps-Assignment/actions/workflows/deploy.yml/badge.svg)
+> **Production-grade Kubernetes platform on AWS** — Full GitOps, Multi-Stack Observability, AWS-Native CI/CD, and Infrastructure as Code across 5 technology layers.
 
-A production-grade deployment of a real-time WebSocket chat application using Docker, Nginx, and GitHub Actions CI/CD — deployed on AWS EC2.
-
-**Live Application:** http://52.206.227.210
-
----
-
-## Project Overview
-
-This project involved debugging and fixing a deliberately broken deployment setup for a real-time WebSocket chat application. The application code was provided — the task was to identify and fix infrastructure issues, deploy to a cloud server, and automate deployments using CI/CD.
+[![AWS](https://img.shields.io/badge/AWS-EKS%20%7C%20ECR%20%7C%20Beanstalk%20%7C%20CloudWatch-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)](https://aws.amazon.com)
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-v1.31-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)](https://kubernetes.io)
+[![ArgoCD](https://img.shields.io/badge/ArgoCD-v3.3.6-EF7B4D?style=for-the-badge&logo=argo&logoColor=white)](https://argoproj.github.io)
+[![Terraform](https://img.shields.io/badge/Terraform-v1.11-7B42BC?style=for-the-badge&logo=terraform&logoColor=white)](https://terraform.io)
+[![Helm](https://img.shields.io/badge/Helm-v3.14-0F1689?style=for-the-badge&logo=helm&logoColor=white)](https://helm.sh)
 
 ---
 
-## Architecture
+## 📸 Platform in Action
 
-```
-User Browser
-     │
-     ▼
-http://52.206.227.210 (AWS EC2)
-     │
-     ▼
-┌─────────────────────────────┐
-│   NGINX (Docker Container)  │
-│   Port 80                   │
-│   - Serves frontend HTML    │
-│   - Proxies /ws to backend  │
-└────────────┬────────────────┘
-             │ Docker Network (appnet)
-             ▼
-┌─────────────────────────────┐
-│  Backend (Docker Container) │
-│  FastAPI + Uvicorn          │
-│  Port 8000                  │
-│  - Handles WebSocket conns  │
-│  - Manages chat rooms       │
-└─────────────────────────────┘
-```
+### 🔍 Observability — ELK Stack (789 Live Log Events)
+![Kibana Discover - Live Logs](assets/kibana-discover.gif)
+
+### 📊 Kibana Observability Overview
+![Kibana Observability Overview](assets/kibana-observability.gif)
+
+### ☁️ AWS CloudWatch Container Insights
+![CloudWatch Container Insights - 54% CPU, 85% Memory](assets/cloudwatch-insights.gif)
+
+### ⚙️ GitHub Actions CI/CD Pipeline
+![GitHub Actions - All Stages Passing](assets/github-actions.gif)
+
+### 🌱 Elastic Beanstalk Docker Deployment
+![Elastic Beanstalk - Green Health](assets/elastic-beanstalk.gif)
+
+### 📈 Grafana — Live Kubernetes Metrics
+![Grafana CPU & Memory Metrics](assets/grafana-cpu-memory.gif)
+
+### 🔄 ArgoCD GitOps Auto-Sync
+![ArgoCD GitOps Sync](assets/argocd.gif)
 
 ---
 
-## Issues Found and Fixed
+## 🏗️ Architecture
 
-### Bug 1 — Dockerfile: App bound to localhost
-**Problem:** The app was started with `--host 127.0.0.1`, meaning it only listened on localhost inside the container. Nginx could not reach it from another container.
-
-```dockerfile
-# Before (broken)
-CMD ["uvicorn", "main:app", "--host", "127.0.0.1", "--port", "8000"]
-
-# After (fixed)
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 ```
-
-### Bug 2 — docker-compose.yml: Frontend volume commented out + no network
-**Problem:** The frontend volume mount was commented out so Nginx served its default page. There was also no shared Docker network between containers.
-
-```yaml
-# Before (broken)
-# - ./frontend:/usr/share/nginx/html:ro
-
-# After (fixed)
-- ./frontend:/usr/share/nginx/html:ro
-
-# Added shared network to both services
-networks:
-  - appnet
-
-networks:
-  appnet:
-    driver: bridge
-```
-
-### Bug 3 — nginx.conf: WebSocket headers commented out + wrong proxy_pass
-**Problem:** The WebSocket upgrade headers were commented out, breaking the WebSocket connection. The proxy_pass pointed to `localhost` instead of the backend container name.
-
-```nginx
-# Before (broken)
-proxy_pass http://localhost:8000/ws;
-# proxy_set_header Upgrade $http_upgrade;
-# proxy_set_header Connection "upgrade";
-
-# After (fixed)
-proxy_pass http://backend:8000/ws;
-proxy_set_header Upgrade $http_upgrade;
-proxy_set_header Connection "upgrade";
+┌──────────────────────────────────────────────────────────────────┐
+│                     Developer Workflow                            │
+│                                                                   │
+│   git push ──► GitHub Actions ──► ECR ──► ArgoCD ──► EKS        │
+└──────────────────────────────────────────────────────────────────┘
+                                │
+              ┌─────────────────┼──────────────────┐
+              ▼                 ▼                  ▼
+       ┌────────────┐   ┌────────────┐   ┌─────────────┐
+       │  GitHub    │   │ CodeBuild  │   │   ArgoCD    │
+       │  Actions   │   │  + ECR     │   │   GitOps    │
+       └────────────┘   └────────────┘   └─────────────┘
+                                               │
+                         ┌─────────────────────▼──────────────────────┐
+                         │              AWS EKS v1.31                  │
+                         │   ┌──────────┐  ┌──────────┐  ┌─────────┐ │
+                         │   │  ArgoCD  │  │   App    │  │  Helm   │ │
+                         │   │ v3.3.6   │  │ (nginx)  │  │ Charts  │ │
+                         │   └──────────┘  └──────────┘  └─────────┘ │
+                         │   ┌──────────┐  ┌──────────┐  ┌─────────┐ │
+                         │   │   ELK    │  │Prometheus│  │CloudWtch│ │
+                         │   │  Stack   │  │+ Grafana │  │ Agent   │ │
+                         │   └──────────┘  └──────────┘  └─────────┘ │
+                         │         3 nodes (t3.small) — ap-south-1    │
+                         └────────────────────────────────────────────┘
+                                               │
+               ┌───────────────────────────────┼──────────────────────┐
+               ▼                               ▼                      ▼
+       ┌──────────────┐               ┌──────────────┐      ┌──────────────┐
+       │  CloudWatch  │               │  CloudTrail  │      │  S3 + ECR    │
+       │  Insights    │               │  Audit Logs  │      │  Artifacts   │
+       │  332 metrics │               │  Multi-region│      │  Terraform   │
+       └──────────────┘               └──────────────┘      └──────────────┘
 ```
 
 ---
 
-## How Docker Containers Are Set Up
+## ✅ What Was Built — Sprint by Sprint
 
-The project uses two containers managed by Docker Compose:
+### Sprint 1 — Foundation Infrastructure
+- **VPC** — Custom VPC with public/private subnets, NAT gateway via **CloudFormation**
+- **EKS v1.31** — Multi-node Kubernetes cluster provisioned with **AWS CDK**
+- **ALB Controller** — AWS Load Balancer Controller deployed via Helm
+- **Ansible** — Node hardening playbook for security compliance
 
-**Backend container** — built from the Dockerfile using Python 3.11-slim. It runs a FastAPI application with Uvicorn on port 8000. It is not exposed to the host directly, only accessible within the Docker network.
+### Sprint 2 — GitOps & CI/CD
+- **GitHub Actions** — 3-stage pipeline (build → test → deploy) with Docker + ECR integration
+- **ArgoCD v3.3.6** — Full GitOps: auto-syncs Helm charts from GitHub to EKS on every push
+- **Helm** — All workloads packaged as Helm charts with configurable `values.yaml`
+- Self-healing: ArgoCD auto-reverts any manual changes to match Git state
 
-**Nginx container** — uses the official nginx:alpine image. It listens on port 80, serves the frontend HTML files, and reverse proxies WebSocket connections to the backend container. It is the only container exposed to the internet.
+### Sprint 3 — Full Observability Stack
+- **Elasticsearch + Kibana 8.5** — Centralized log storage and visualization (**789 live log events**)
+- **Filebeat** — DaemonSet shipping container logs from all pods across all namespaces
+- **Prometheus + Grafana** — Metrics collection with **15+ pre-built Kubernetes dashboards**
+- **CloudWatch Container Insights** — Pod-level CPU/memory/network (**332 metrics flowing**)
 
-Both containers are configured with `restart: always` so they automatically restart if they crash or if the server reboots.
+### Sprint 4 — AWS Native Services
+- **CloudTrail** — Multi-region audit trail with log delivery to S3
+- **CodeBuild** — Docker image build pipeline pushing to ECR
+- **Elastic Beanstalk** — Docker app deployed from ECR (**Green health confirmed**)
+- **EKS Control Plane Logging** — API server, audit, authenticator logs enabled
 
----
-
-## How Docker Networking Works
-
-Both containers are connected to a custom bridge network called `appnet`. This allows them to communicate using container names as hostnames. Nginx resolves `backend` directly to the backend container's IP address within the network — no hardcoded IPs needed.
-
-```
-chat-nginx  ──── appnet (bridge) ──── chat-backend
-                 172.x.x.x/16
-```
-
----
-
-## How Nginx Reverse Proxy Works
-
-Nginx handles two types of requests:
-
-- Requests to `/` serve the static frontend HTML from `/usr/share/nginx/html`
-- Requests to `/ws` are proxied to the backend container on port 8000
-
-```nginx
-location / {
-    root /usr/share/nginx/html;
-    index index.html;
-}
-
-location /ws {
-    proxy_pass http://backend:8000/ws;
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "upgrade";
-}
-```
+### Sprint 5 — IaC & Additional CI/CD
+- **Terraform** — S3 artifact bucket with versioning, encryption, and resource tagging
+- **GitLab CI** — `.gitlab-ci.yml` pipeline with build, test, deploy stages
 
 ---
 
-## How WebSocket Works Through Nginx
+## 🛠️ Complete Tech Stack
 
-WebSocket connections start as a standard HTTP request with an `Upgrade` header. Nginx must forward these headers to the backend — otherwise the connection stays as plain HTTP and WebSocket fails.
+### ☁️ Cloud & Infrastructure
+| Tool | Version | Usage |
+|------|---------|-------|
+| AWS EKS | v1.31 | Managed Kubernetes cluster |
+| AWS CDK | v2 | EKS cluster provisioning |
+| CloudFormation | — | VPC and networking |
+| Terraform | v1.11 | S3 artifact storage (IaC) |
+| AWS ECR | — | Docker image registry |
+| Elastic Beanstalk | AL2023 | PaaS Docker deployment |
+| CloudTrail | — | Multi-region audit logging |
+| CloudWatch | — | Container Insights (332 metrics) |
 
-The two critical headers are:
-- `Upgrade: websocket` — tells the backend to upgrade the connection
-- `Connection: upgrade` — tells Nginx to keep the connection open
+### 🔄 CI/CD & GitOps
+| Tool | Version | Usage |
+|------|---------|-------|
+| GitHub Actions | — | CI/CD pipeline (3 stages) |
+| ArgoCD | v3.3.6 | GitOps auto-sync from GitHub |
+| CodeBuild | — | AWS-native Docker builds |
+| GitLab CI | — | Alternative pipeline |
+| Helm | v3.14 | Kubernetes package management |
 
-Without these headers (which were commented out in the original config), the WebSocket handshake fails and the app shows as disconnected.
+### 📊 Observability
+| Tool | Version | Usage |
+|------|---------|-------|
+| Elasticsearch | 8.5.1 | Log storage and indexing |
+| Kibana | 8.5.1 | Log visualization (789 events) |
+| Filebeat | 8.5.1 | Log shipping DaemonSet |
+| Prometheus | v0.90.1 | Metrics scraping |
+| Grafana | Latest | 15+ pre-built dashboards |
 
----
-
-## How CI/CD Pipeline Works
-
-Every `git push` to the `main` branch triggers the GitHub Actions workflow:
-
-```
-git push → GitHub Actions triggered
-              │
-              ▼
-         Checkout code
-              │
-              ▼
-         SSH into EC2 (52.206.227.210)
-              │
-              ▼
-         cd ~/devops
-         git pull latest code
-              │
-              ▼
-         docker-compose down
-         docker-compose up -d --build
-              │
-              ▼
-         App live with latest changes
-```
-
-Secrets stored in GitHub Actions — `EC2_HOST`, `EC2_USER`, `EC2_KEY` — no credentials hardcoded anywhere.
-
----
-
-## Steps to Deploy
-
-### Prerequisites
-- AWS EC2 instance (Ubuntu 24.04)
-- Docker and Docker Compose installed
-- Port 80 open in security group
-
-### 1. Clone the repository
-```bash
-git clone https://github.com/vivek1251/DevOps-Assignment.git
-cd DevOps-Assignment
-```
-
-### 2. Run the application
-```bash
-docker-compose up -d --build
-```
-
-### 3. Access the application
-Open your browser and go to:
-```
-http://<your-public-ip>
-```
+### 🔒 Security & Networking
+| Tool | Usage |
+|------|-------|
+| Ansible | Node hardening playbook |
+| ALB Controller | AWS Load Balancer ingress |
+| IAM / IRSA | Service account roles |
+| VPC | Custom networking with subnets |
+| Security Groups | Fine-grained port access |
 
 ---
 
-## Tech Stack
+## 🔑 Real-World Problems Solved
 
-| Layer | Technology |
-|---|---|
-| Application | FastAPI + Uvicorn (Python) |
-| Containerization | Docker |
-| Orchestration | Docker Compose |
-| Reverse Proxy | Nginx |
-| Cloud | AWS EC2 (Ubuntu 24.04) |
-| CI/CD | GitHub Actions |
+These are actual issues encountered and resolved — not tutorial steps:
+
+| Problem | Root Cause | Solution |
+|---------|-----------|----------|
+| Pods stuck in Pending | t3.small hit 11-pod limit | Scaled node group 1 → 3 nodes |
+| ALB not provisioning | Missing `DescribeListenerAttributes` IAM permission | Added inline policy to ALB controller role |
+| Kibana `.security` index missing | Elasticsearch restarted before bootstrap completed | Manually regenerated Kibana service token via ES API |
+| CloudWatch `MissingEndpoint` error | Agent missing region config | Patched cwagentconfig with explicit region |
+| Git push rejected (685MB file) | Terraform provider binary committed to Git | Used `git filter-branch` to rewrite history |
+| Kibana auth failure after restart | Stale service account token | Deleted and recreated token via `/_security/service/` API |
 
 ---
 
-## Project Structure
+## 📁 Repository Structure
 
 ```
-DevOps-Assignment/
-├── app/
-│   ├── main.py               # FastAPI WebSocket application
-│   └── requirements.txt      # Python dependencies
-├── frontend/
-│   └── index.html            # Chat UI
-├── .github/
-│   └── workflows/
-│       └── deploy.yml        # CI/CD pipeline
-├── Dockerfile                # Container build instructions
-├── docker-compose.yml        # Multi-container setup
-├── nginx.conf                # Reverse proxy configuration
+eks-gitops-platform/
+├── .github/workflows/        # GitHub Actions CI/CD pipeline
+├── .gitlab-ci.yml            # GitLab CI pipeline (build/test/deploy)
+├── helm/eks-gitops-app/      # Application Helm chart
+│   ├── Chart.yaml
+│   ├── values.yaml
+│   └── templates/deployment.yaml
+├── terraform/main.tf         # S3 bucket with versioning (Terraform)
+├── argocd-app.yaml           # ArgoCD Application manifest
+├── buildspec.yml             # AWS CodeBuild specification
+├── Dockerfile                # Docker image definition
+├── Dockerrun.aws.json        # Elastic Beanstalk Docker config
+├── elasticsearch-values.yaml # Elasticsearch Helm overrides
+├── kibana-values.yaml        # Kibana Helm overrides
+├── filebeat-values.yaml      # Filebeat Helm overrides
+├── prometheus-values.yaml    # Prometheus + Grafana overrides
+├── assets/                   # Portfolio GIFs and screenshots
 └── README.md
 ```
 
 ---
 
-*Built by [Vivek Bommalla](https://github.com/vivek1251)*
+## 📊 Platform Metrics
+
+| Metric | Value |
+|--------|-------|
+| EKS Version | v1.31.13-eks-ecaa3a6 |
+| Total Namespaces | 7 |
+| Total Pods Running | 25+ |
+| Kibana Log Events | 789 (last 15 min) |
+| Log Rate | 44 events/minute |
+| CloudWatch Metrics | 332 |
+| Cluster CPU | 54% utilized |
+| Cluster Memory | 85% utilized |
+| Grafana Dashboards | 15+ pre-built |
+| CI/CD Stages | 3 (build / test / deploy) |
+
+---
+
+## 🎯 Interview Talking Points
+
+**"Tell me about your Kubernetes experience"**
+> I built a multi-node EKS v1.31 cluster from scratch using AWS CDK, deployed 25+ pods across 7 namespaces, and resolved real production issues — pod scheduling failures, IAM permission gaps, and resource constraints.
+
+**"How have you implemented GitOps?"**
+> I deployed ArgoCD v3.3.6 with automated sync — any git push auto-deploys to EKS with self-healing. The entire cluster state is declared in Git. I also wrote a GitLab CI pipeline as an alternative to GitHub Actions.
+
+**"What observability tools have you used?"**
+> I built a dual observability stack: ELK (789 live log events at 44/min) and Prometheus + Grafana (15+ dashboards). Also enabled CloudWatch Container Insights — 332 metrics flowing from all namespaces.
+
+**"Have you used Terraform?"**
+> Yes — Terraform for S3, CDK for EKS, CloudFormation for VPC. I understand multiple IaC tools and when to use each.
+
+**"Tell me about a problem you solved"**
+> Kibana kept failing after Elasticsearch restarts because the `.security` index didn't bootstrap in time. I diagnosed it from pod logs, traced it to a stale service account token, and fixed it by calling the Elasticsearch security API to regenerate the token. That's the kind of real debugging experience this project gave me.
+
+---
+
+## 👤 Author
+
+**Vivek Bommalla**
+- 📧 vivekbommalla1251@gmail.com
+- 💼 [LinkedIn](https://linkedin.com/in/vivekbommalla1251)
+- 🐙 [GitHub](https://github.com/vivek1251)
+
+---
+
+<p align="center">
+<b>Every component deployed, debugged, and verified on real AWS infrastructure.</b><br>
+<i>Not a tutorial follow-along — real problems encountered and solved.</i>
+</p>
