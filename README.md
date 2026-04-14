@@ -18,7 +18,7 @@
 ### 📊 Kibana Observability Overview
 ![Kibana Observability Overview](assets/kibana-observability.gif)
 
-### ☁️ AWS CloudWatch Container Insights
+### 🔄 ArgoCD GitOps Auto-Sync
 ![CloudWatch Container Insights - 54% CPU, 85% Memory](assets/cloudwatch-insights.gif)
 
 ### ⚙️ GitHub Actions CI/CD Pipeline
@@ -30,7 +30,7 @@
 ### 📈 Grafana — Live Kubernetes Metrics
 ![Grafana CPU & Memory Metrics](assets/grafana-cpu-memory.gif)
 
-### 🔄 ArgoCD GitOps Auto-Sync
+### ☁️ AWS CloudWatch Container Insights
 ![ArgoCD GitOps Sync](assets/argocd.gif)
 
 ---
