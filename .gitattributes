@@ -1,0 +1,4 @@
+assets/grafana-namespace-metrics.gif filter=lfs diff=lfs merge=lfs -text
+assets/grafana-cpu-memory.gif filter=lfs diff=lfs merge=lfs -text
+assets/grafana-dashboards-list.gif filter=lfs diff=lfs merge=lfs -text
+assets/argocd.gif filter=lfs diff=lfs merge=lfs -text
