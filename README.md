@@ -30,6 +30,14 @@
 ### 📈 Grafana — Live Kubernetes Metrics
 ![Grafana CPU & Memory Metrics](assets/grafana-cpu-memory.gif)
 
+### 📋 Grafana — All Dashboards (15+)
+
+[![Grafana Dashboards List](https://github.com/vivek1251/eks-gitops-platform/raw/main/assets/grafana-dashboards-list.gif)](assets/grafana-dashboards-list.gif)
+
+### 🔬 Grafana — Namespace-Level Metrics
+
+[![Grafana Namespace Metrics](https://github.com/vivek1251/eks-gitops-platform/raw/main/assets/grafana-namespace-metrics.gif)](assets/grafana-namespace-metrics.gif)
+
 ### ☁️ AWS CloudWatch Container Insights
 ![ArgoCD GitOps Sync](assets/cloudwatch-container-insights.gif)
 
