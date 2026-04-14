@@ -19,10 +19,10 @@
 ![Kibana Observability Overview](assets/kibana-observability.gif)
 
 ### 🔄 ArgoCD GitOps Auto-Sync
-![CloudWatch Container Insights - 54% CPU, 85% Memory](assets/argocd-sync.gif)
+![ArgoCD GitOps Auto-Sync](assets/argocd-sync.gif)
 
-### ☁️ AWS CloudWatch metrics
-![GitHub Actions - All Stages Passing](assets/cloudwatch-metrics.gif)
+### 📡 AWS CloudWatch Metrics Explorer
+![AWS CloudWatch Metrics Explorer](assets/cloudwatch-metrics.gif)
 
 ### 🌱 Elastic Beanstalk Docker Deployment
 ![Elastic Beanstalk - Green Health](assets/elastic-beanstalk.gif)
@@ -38,9 +38,8 @@
 
 [![Grafana Namespace Metrics](https://github.com/vivek1251/eks-gitops-platform/raw/main/assets/grafana-namespace-metrics.gif)](assets/grafana-namespace-metrics.gif)
 
-### ☁️ AWS CloudWatch Container Insights
-![ArgoCD GitOps Sync](assets/cloudwatch-container-insights.gif)
-
+### 🖥️ AWS CloudWatch Container Insights
+![AWS CloudWatch Container Insights - 54% CPU, 85% Memory](assets/cloudwatch-container-insights.gif)
 ---
 
 ## 🏗️ Architecture
@@ -145,7 +144,7 @@
 | Kibana | 8.5.1 | Log visualization (789 events) |
 | Filebeat | 8.5.1 | Log shipping DaemonSet |
 | Prometheus | v0.90.1 | Metrics scraping |
-| Grafana | Latest | 15+ pre-built dashboards |
+| Grafana | v10.4.1 | 15+ pre-built dashboards |
 
 ### 🔒 Security & Networking
 | Tool | Usage |
