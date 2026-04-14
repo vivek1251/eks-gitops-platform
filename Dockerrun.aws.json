@@ -1,7 +1,7 @@
 {
   "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "585707316406.dkr.ecr.ap-south-1.amazonaws.com/eks-gitops-app:latest",
+    "Name": "<YOUR_ACCOUNT_ID>.dkr.ecr.ap-south-1.amazonaws.com/eks-gitops-app:latest",
     "Update": "true"
   },
   "Ports": [
