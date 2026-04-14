@@ -21,7 +21,7 @@
 ### 🔄 ArgoCD GitOps Auto-Sync
 ![CloudWatch Container Insights - 54% CPU, 85% Memory](assets/cloudwatch-insights.gif)
 
-### ⚙️ GitHub Actions CI/CD Pipeline
+### ☁️ AWS CloudWatch metrics
 ![GitHub Actions - All Stages Passing](assets/github-actions.gif)
 
 ### 🌱 Elastic Beanstalk Docker Deployment
