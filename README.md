@@ -19,10 +19,10 @@
 ![Kibana Observability Overview](assets/kibana-observability.gif)
 
 ### 🔄 ArgoCD GitOps Auto-Sync
-![CloudWatch Container Insights - 54% CPU, 85% Memory](assets/cloudwatch-insights.gif)
+![CloudWatch Container Insights - 54% CPU, 85% Memory](assets/argocd-sync.gif)
 
 ### ☁️ AWS CloudWatch metrics
-![GitHub Actions - All Stages Passing](assets/github-actions.gif)
+![GitHub Actions - All Stages Passing](assets/cloudwatch-metrics.gif)
 
 ### 🌱 Elastic Beanstalk Docker Deployment
 ![Elastic Beanstalk - Green Health](assets/elastic-beanstalk.gif)
@@ -31,7 +31,7 @@
 ![Grafana CPU & Memory Metrics](assets/grafana-cpu-memory.gif)
 
 ### ☁️ AWS CloudWatch Container Insights
-![ArgoCD GitOps Sync](assets/argocd.gif)
+![ArgoCD GitOps Sync](assets/cloudwatch-container-insights.gif)
 
 ---
 
